@@ -13,6 +13,17 @@ public class BouncingBall implements Runnable {
     private static final int MAX_SPEED = 15;
     private Field field;
     private int radius;
+
+    public int getRadius() {
+        return radius;
+    }
+
+    private double angle;
+
+    public double getAngle() {
+        return angle;
+    }
+
     private Color color;
     // Текущие координаты мяча
     private double x;
@@ -21,6 +32,17 @@ public class BouncingBall implements Runnable {
     private int speed;
     private double speedX;
     private double speedY;
+
+    // Флаг приостановленности движения
+    private boolean paused;
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
 
     // Конструктор класса BouncingBall
     public BouncingBall(Field field) {
@@ -38,7 +60,7 @@ public class BouncingBall implements Runnable {
         }
         // Начальное направление скорости тоже случайно,
         // угол в пределах от 0 до 2PI
-        double angle = Math.random() * 2 * Math.PI;
+        angle = Math.random() * 2 * Math.PI;
         // Вычисляются горизонтальная и вертикальная компоненты скорости
         speedX = 3 * Math.cos(angle);
         speedY = 3 * Math.sin(angle);

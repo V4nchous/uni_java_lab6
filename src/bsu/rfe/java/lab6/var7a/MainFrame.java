@@ -17,7 +17,9 @@ public class MainFrame extends JFrame {
     private static final int WIDTH = 700;
     private static final int HEIGHT = 500;
     private JMenuItem pauseMenuItem;
+    private JMenuItem pauseBigMenuItem;
     private JMenuItem resumeMenuItem;
+
     // Поле, по которому прыгают мячи
     private Field field = new Field();
 
@@ -43,6 +45,7 @@ public class MainFrame extends JFrame {
                     // Ни один из пунктов меню не являются
                     // доступными - сделать доступным "Паузу"
                     pauseMenuItem.setEnabled(true);
+                    pauseBigMenuItem.setEnabled(true);
                 }
             }
         };
@@ -53,17 +56,31 @@ public class MainFrame extends JFrame {
         Action pauseAction = new AbstractAction("Приостановить движение") {
             public void actionPerformed(ActionEvent event) {
                 field.pause();
+                pauseBigMenuItem.setEnabled(false);
                 pauseMenuItem.setEnabled(false);
                 resumeMenuItem.setEnabled(true);
             }
         };
         pauseMenuItem = controlMenu.add(pauseAction);
         pauseMenuItem.setEnabled(false);
+
+        Action pauseBigAction = new AbstractAction("Приостановить движение больших мячей") {
+            public void actionPerformed(ActionEvent event) {
+                field.pauseBig();
+                pauseMenuItem.setEnabled(false);
+                pauseBigMenuItem.setEnabled(false);
+                resumeMenuItem.setEnabled(true);
+            }
+        };
+        pauseBigMenuItem = controlMenu.add(pauseBigAction);
+        pauseBigMenuItem.setEnabled(false);
+
         Action resumeAction = new AbstractAction("Возобновить движение") {
             public void actionPerformed(ActionEvent event) {
                 field.resume();
-                pauseMenuItem.setEnabled(true);
                 resumeMenuItem.setEnabled(false);
+                pauseMenuItem.setEnabled(true);
+                pauseBigMenuItem.setEnabled(true);
             }
         };
         resumeMenuItem = controlMenu.add(resumeAction);

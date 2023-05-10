@@ -11,8 +11,7 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class Field extends JPanel {
-    // Флаг приостановленности движения
-    private boolean paused;
+
     // Динамический список скачущих мячей
     private ArrayList<BouncingBall> balls = new ArrayList<BouncingBall>(10);
     // Класс таймер отвечает за регулярную генерацию событий ActionEvent
@@ -25,7 +24,7 @@ public class Field extends JPanel {
         }
     });
 
-    // Конструктор класса BouncingBall
+    // Конструктор класса Field
     public Field() {
         // Установить цвет заднего фона белым
         setBackground(Color.WHITE);
@@ -52,18 +51,30 @@ public class Field extends JPanel {
         balls.add(new BouncingBall(this));
     }
 
+    public synchronized void pauseBig() {
+        for (BouncingBall ball : balls) {
+            if (ball.getAngle() > 0 && ball.getAngle() < 1.57) {
+                ball.setPaused(true);
+            }
+        }
+    }
+
     // Метод синхронизированный, т.е. только один поток может
     // одновременно быть внутри
     public synchronized void pause() {
         // Включить режим паузы
-        paused = true;
+        for (BouncingBall ball : balls) {
+            ball.setPaused(true);
+        }
     }
 
     // Метод синхронизированный, т.е. только один поток может
     // одновременно быть внутри
     public synchronized void resume() {
         // Выключить режим паузы
-        paused = false;
+        for (BouncingBall ball : balls) {
+            ball.setPaused(false);
+        }
         // Будим все ожидающие продолжения потоки
         notifyAll();
     }
@@ -71,7 +82,7 @@ public class Field extends JPanel {
     // Синхронизированный метод проверки, может ли мяч двигаться
     // (не включен ли режим паузы?)
     public synchronized void canMove(BouncingBall ball) throws InterruptedException {
-        if (paused) {
+        if (ball.isPaused()) {
             // Если режим паузы включен, то поток, зашедший
             // внутрь данного метода, засыпает
             wait();
